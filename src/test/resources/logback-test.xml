@@ -1,0 +1,36 @@
+<configuration>
+    <timestamp key="byDay" datePattern="yyyyMMdd'T'HHmmss"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>TRACE</level>
+        </filter>
+        <encoder>
+            <pattern>%date %highlight(%-5level) [%thread] %highlight(%class.%method:%line) - %msg %mdc %n</pattern>
+        </encoder>
+    </appender>
+	
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>TRACE</level>
+      </filter>
+      <file>build/logs/test-log-${byDay}.txt</file>
+      <append>true</append>
+      <encoder>
+         <pattern>%date %-5level [%thread] %class.%method:%line - %msg %mdc %n</pattern>
+      </encoder>
+   </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="org.testcontainers" level="WARN" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.github.dockerjava" level="WARN"/>
+    <logger name="software.amazon.awssdk.request" level="INFO"/>
+    <logger name="org.apache.http.wire" level="INFO"/> <!-- can be used to track http request/response to rds -->
+    <logger name="okhttp3" level="INFO"/> <!-- can be used to track http request/response to kubernetes -->
+</configuration>
